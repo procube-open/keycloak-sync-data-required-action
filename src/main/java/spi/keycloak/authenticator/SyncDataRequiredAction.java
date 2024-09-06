@@ -1,4 +1,4 @@
-package com.twogenidentity.keycloak.authenticator;
+package spi.keycloak.authenticator;
 
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
