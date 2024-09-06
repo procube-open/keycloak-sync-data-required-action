@@ -18,7 +18,8 @@ public class SyncDataRequiredAction implements RequiredActionProvider {
 
     @Override
     public void requiredActionChallenge(RequiredActionContext context) {
-        System.out.println("Hello, World!");
+        IdpClient idpClient = new IdpClient();
+        idpClient.getUserData();
         context.success();
     }
 
