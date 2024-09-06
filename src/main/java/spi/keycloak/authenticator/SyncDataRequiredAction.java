@@ -24,6 +24,11 @@ public class SyncDataRequiredAction implements RequiredActionProvider {
     }
 
     @Override
+    public void processAction(RequiredActionContext context) {
+
+    }
+
+    @Override
     public void close() {
 
     }
