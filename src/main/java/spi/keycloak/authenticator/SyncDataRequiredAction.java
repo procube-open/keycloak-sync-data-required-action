@@ -51,11 +51,11 @@ public class SyncDataRequiredAction implements RequiredActionProvider {
                                 .build();
 
         try {
-            logger.infof("Send id to flask. Username: %s", currentUser.getUsername());
+            logger.infof("Send request for user_id: %s, username: %s.", currentUser.getId(), currentUser.getUsername());
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             logger.infof("Response: %s", response);
         } catch (IOException | InterruptedException ex) {
-            logger.errorf("Fail to send id. Username: %s. Error message: %s", currentUser.getUsername(), ex);
+            logger.errorf("Fail to send request for user_id: %s, username: %s. Error message: %s", currentUser.getId(), currentUser.getUsername(), ex);
             ex.printStackTrace();
         }
 
