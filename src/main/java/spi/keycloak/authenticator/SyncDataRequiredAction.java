@@ -6,6 +6,7 @@ import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.RealmModel;
 
 // import org.keycloak.models.utils.ModelToRepresentation;
 // import org.keycloak.representations.idm.CredentialRepresentation;
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import org.json.JSONObject;
 
 
 public class SyncDataRequiredAction implements RequiredActionProvider {
@@ -34,8 +36,9 @@ public class SyncDataRequiredAction implements RequiredActionProvider {
     @Override
     public void requiredActionChallenge(RequiredActionContext context) {
         UserModel currentUser = context.getUser();
+        RealmModel realm = context.getRealm();
 
-        logger.infof("Required Action 'Sync Data' is called by %s.", currentUser.getUsername());
+        logger.infof("Required Action 'Sync Data' is called by %s in realm '%s'.", currentUser.getUsername(), realm.getName());
 
         // // currentUser の credentials を取得する。これには secretData も含まれている。
         // List<CredentialRepresentation> credentials = currentUser.credentialManager()
@@ -43,11 +46,16 @@ public class SyncDataRequiredAction implements RequiredActionProvider {
         //                                                 .map(ModelToRepresentation::toRepresentation)
         //                                                 .collect(Collectors.toList());
 
-        String url = String.format("http://localhost:3000/user/%s", currentUser.getId());
+        JSONObject userParams = new JSONObject();
+        userParams.put("realm", realm.getName());
+        userParams.put("userId", currentUser.getId());
+
+        String url = "http://localhost:3000/sync";
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                                 .uri(URI.create(url))
-                                .GET()
+                                .header("Content-Type", "application/json")
+                                .POST(HttpRequest.BodyPublishers.ofString(userParams.toString()))
                                 .build();
 
         try {
