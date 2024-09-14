@@ -58,14 +58,17 @@ public class SyncDataRequiredAction implements RequiredActionProvider {
                                 .POST(HttpRequest.BodyPublishers.ofString(userParams.toString()))
                                 .build();
 
-        try {
-            logger.infof("Send request for user_id: %s, username: %s.", currentUser.getId(), currentUser.getUsername());
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            logger.infof("Response: %s", response);
-        } catch (IOException | InterruptedException ex) {
-            logger.errorf("Fail to send request for user_id: %s, username: %s. Error message: %s", currentUser.getId(), currentUser.getUsername(), ex);
-            ex.printStackTrace();
-        }
+        logger.infof("Send request for user_id: %s, username: %s.", currentUser.getId(), currentUser.getUsername());
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+            .thenApply(HttpResponse::body)
+            .thenAccept(response -> {
+                logger.infof("Response: %s", response);
+            })
+            .exceptionally(ex -> {
+                logger.errorf("Fail to send request for user_id: %s, username: %s. Error message: %s", currentUser.getId(), currentUser.getUsername(), ex);
+                ex.printStackTrace();
+                return null;
+            });
 
         context.success();
     }
