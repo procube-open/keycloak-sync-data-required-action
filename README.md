@@ -28,6 +28,14 @@ mvn clean package
 
 ビルドが完了すると、`./target/keycloak-sync-data-required-action.jar` が生成されます。
 
+## Usage
+
+生成された `keycloak-sync-data-required-action.jar` の使い方については、Keycloak公式ドキュメントをご参照ください。
+
+- [Keycloak Server Developer Guide](https://www.keycloak.org/docs/latest/server_development/#_providers)
+
+このjarファイルはKeycloakのSPI（Service Provider Interface）としてデプロイできます。
+
 ## License
 
 このプロジェクトは [Apache License 2.0](LICENSE) の下でライセンスされています。
